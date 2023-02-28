@@ -1,0 +1,15 @@
+*{
+    margin:0;
+    padding:0;
+    width:100vw;
+    height: 100vh
+}
+
+body{
+    display:flex;
+}
+
+#sidebar{
+    width: 33%;
+    background-color: rgb(37, 37, 243);
+}
