@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div id="content">
+        <table id="listing">
+            <thead>
+              <tr>
+                <th>Matricule</th>
+                <th>Libellé client</th>
+                <th>Nb virements</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% if d %}  
+                {% for i in d %}
+                <tr>
+                    <td>{{ i.Matricule }}</td>
+                    <td>{{ i.Libellé }}</td>
+                    <td>{{ i.Nb_virements }}</td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+            </tbody>
+          </table>
+    </div>
+{% endblock content %}
