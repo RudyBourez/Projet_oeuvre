@@ -1,9 +1,0 @@
-<div id="navbar" class="flex">
-    <div>
-        <p> METEO </p>
-        <p> {% now 'j/m/Y' %} </p>
-    </div>
-    <h1> {{ request.path|slice:"1:-1"|upper }} </h1>
-    {% load static %}
-    <img src="{% static 'sources/enveloppe.png' %}">
-</div>

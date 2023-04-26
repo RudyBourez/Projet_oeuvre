@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <div class="box">
+        <form method="POST" action="/contact" class="form">
+            <div class="field">
+                <div class="control">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" placeholder="Votre adresse mail" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <label for="subject">Sujet:</label>
+                    <select name='subject'>
+                        <option value='choose_option'>------Choisissez un sujet------</option>
+                        <option value='Mot de passe oublié'>Mot de passe oublié</option>
+                        <option value='Création de compte'>Création de compte</option>
+                        <option value='Modification de droit'>Modification de droit</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <label for="comment">Renseignez le besoin de votre demande:</label>
+                    <textarea name="comment" placeholder="Commentaire" autofocus="" rows="5"></textarea>
+                </div>
+            </div>
+
+            <input type="submit" value="Envoyer">
+        </form>
+    </div>
+</div>
+<form method="POST" action="/signup">
+{% endblock %}

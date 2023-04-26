@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="users">
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Date création</th>
+                <th>Role</th>
+                <th>Actif</th>
+                <th>Modifier utilisateur</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    {% for col in row[:-1] %}
+                        <td>{{ col }}</td>
+                    {% endfor %}
+                    <td><a href={{ url_for('admin.modify_users', id=row[-1])}}><i class="fa-solid fa-pen"></i></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

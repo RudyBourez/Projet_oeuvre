@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <div class="box">
+        <form method="POST" action="/login" class="form">
+            <div class="field">
+                <div class="control">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" placeholder="Votre adresse mail" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <label for="password">Mot de passe:</label>
+                    <input type="password" name="password" placeholder="Votre mot de passe">
+                </div>
+            </div>
+            <div class="field">
+                <label for="remember">Se rappeler de moi</label>
+                    <input type="checkbox" name="remember">
+                    
+            </div>
+            <input type="submit" value="Log in">
+            <p> Vous n'avez pas de compte ou vous avez oublié votre mot de passe? Contactez-nous.</p>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Application plafond de virement</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='src/logo.jpg') }}" />
+    <link rel='stylesheet' type='text/css' media='screen' href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <nav class="flexbox">
+        <div>
+            {% if current_user.is_authenticated %}
+                {% if request.path!='/accueil' %}
+                    <a href="{{ url_for('main.index') }}"><i class="fa-solid fa-house"></i> Accueil</a>
+                {% endif %}
+                {% if current_user.roles[0].name in ('Supervisor', 'User') %}
+                    {% if request.path!='/plafonds' %}
+                        <a href="{{ url_for('main.plafonds') }}"><i class="fa-solid fa-light fa-coins"></i> Plafonds</a>
+                    {% endif %}
+                    {% if request.path!='/clients' %}
+                        <a href="{{ url_for('main.clients') }}"><i class="fa-solid fa-address-card"></i> Clients</a>
+                    {% endif %}
+                    {% if current_user.roles[0].name == 'Supervisor' %}
+                        {% if request.path!='/suivi' %}
+                            <a href="{{ url_for('main.suivi') }}"><i class="fa-solid fa-chart-line"></i> Suivi</a>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {% if current_user.roles[0].name == 'Admin' %}
+                    {% if request.path!='/utilisateurs' %}
+                        <a href="{{ url_for('admin.users') }}"><i class="fa-solid fa-gear"></i> Utilisateurs</a>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+  
+        <h1> {{ request.path[1:]|capitalize }} </h1>
+        <div>
+            {% if not current_user.is_authenticated %}
+                {% if request.path!='/connexion' %}
+                    <a href="{{ url_for('auth.login') }}"><i class="fa-solid fa-right-to-bracket"></i> Connexion</a>
+                {% endif %}
+                {% if request.path!='/contact' %}
+                    <a href="{{ url_for('main.contact') }}"><i class="fa-regular fa-envelope"></i> Nous contacter</a>
+                {% endif %}
+            {% else %}
+                <a href="{{ url_for('auth.logout') }}"><i class="fa-solid fa-power-off"></i> Déconnexion</a>
+            {% endif %}
+
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+    <div id="flash">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class={{ category }}>
+                    {{message}}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    </div>
+
+    <script src='static/js/main.js'></script>
+</body>
+
+</html>

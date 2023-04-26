@@ -1,5 +1,9 @@
-django
-django-dotenv
-psycopg2-binary
-pandas
-numpy
+flask
+flask-login
+flask-mail
+flask-sqlalchemy
+flask-security
+python-dotenv
+pytest
+pytest-coverage
+pytest-flask

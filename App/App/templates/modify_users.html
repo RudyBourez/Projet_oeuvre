@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="box">
+    
+    <form method="POST" action="/update" class="form">
+        <div class="field">
+            <div class="control">
+                <label for="email">Email:</label>
+                <input type="email" name="email" value={{ data[0] }} autofocus="" readonly="true">
+            </div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <label for="date_creation">Date de création du compte:</label>
+                <input type="text" name="date_creation" value={{ data[1] }} autofocus="" readonly="true">
+            </div>
+        </div>
+        <div class="field">
+            <label for="role">Role:</label>
+            <select name="role">Role
+                {% if data[2] == "Supervisor" %}
+                    <option value="Supervisor" selected>Supervisor</option>
+                    <option value="User">User</option>
+                    <option value="Admin">Admin</option>
+                {% elif data[2] == "User" %}
+                    <option value="Supervisor">Supervisor</option>
+                    <option value="User" selected>User</option>
+                    <option value="Admin">Admin</option>
+                {% else %}
+                    <option value="Supervisor">Supervisor</option>
+                    <option value="User">User</option>
+                    <option value="Admin" selected>Admin</option>
+                {% endif %}
+            </select>
+        </div>
+        <div class="field">
+            <label for="is_active">Compte actif:</label>
+            <select name="is_active">Role
+                {% if data[3] == 0 %}
+                    <option value="1">1</option>
+                    <option value="0" selected>0</option>
+                {% else %}
+                    <option value="1" selected>1</option>
+                    <option value="0">0</option>
+                {% endif %}
+            </select>
+        </div>
+        <input type="submit" value="Modifier">
+        <a href={{ url_for('admin.users')}}>Annuler</a>
+    </form>
+</div>
+{% endblock %}
