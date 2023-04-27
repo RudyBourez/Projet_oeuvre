@@ -27,6 +27,18 @@ def modify_users_post():
     email = request.form.get('email')
     role = request.form.get('role')
     is_active = int(request.form.get('is_active'))
-    data = UserRoles.modify_user(email, role, is_active)
+    UserRoles.modify_user(email, role, is_active)
     flash('La base de donnée a correctement été modifiée', 'success')
     return redirect(url_for('admin.users'))
+
+@admin.route('/creation', methods=['GET'])
+@login_required
+@roles_required("Admin")
+def add_user():
+    return render_template('add_users.html')
+
+@admin.route('/creation', methods=['POST'])
+@login_required
+@roles_required("Admin")
+def add_user_post():
+    return render_template('add_users.html')

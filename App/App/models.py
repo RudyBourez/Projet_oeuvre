@@ -13,11 +13,6 @@ class User(UserMixin, db.Model):
     roles = db.relationship('Role', secondary='UserRole',
             backref=db.backref('users', lazy='dynamic'))
     
-    @classmethod
-    def add_user(cls, **user):
-        obj=cls(**user)
-        db.session.add(obj)
-        db.session.commit()
     
     @classmethod
     def get_all_user(cls):
@@ -29,6 +24,7 @@ class User(UserMixin, db.Model):
                                     LEFT JOIN ROLE ROLES ON ROLES.ID=USERROLES.ROLE_ID
                                     ''')).cursor
         return cursor.fetchall()
+    
     @classmethod
     def create_user(cls, email):
         conn = db.session()

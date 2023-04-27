@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <div class="box">
+        <form method="POST" action="/creation" class="form">
+            <div class="field">
+                <div class="control">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" placeholder="Email" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <label for="role">Role:</label>
+                    <select name="role">Role
+                        <option value="Supervisor">Supervisor</option>
+                        <option value="User" selected>User</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+            </div>
+            <input type="submit" value="Créer">
+        </form>
+    </div>
+</div>
+{% endblock %}
