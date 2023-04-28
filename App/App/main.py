@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from flask_mail import Message
-from flask_login import login_required
+from .models import User
+from werkzeug.security import check_password_hash
+from flask_login import login_required, current_user
 from .decorator import roles_required
 from . import mail
 import os
@@ -43,3 +45,20 @@ def plafonds():
 @roles_required("Supervisor")
 def suivi():
     return render_template('suivi.html')
+
+@main.route('/update_password', methods=['GET'])
+@login_required
+def update_password():
+    return render_template('update_password.html')
+
+@main.route('/update_password', methods=['POST'])
+@login_required
+def update_password_post():
+    password = request.form.get("password")
+    confirm_password = request.form.get("confirm_password")
+    if password == confirm_password:
+        User.modify_password(current_user.email, password)
+        flash('Votre mot de passe a été changé.', "success")
+        return redirect(url_for('main.index'))
+    flash('Les deux mots de passe ne sont pas identiques', 'alert')
+    return redirect(url_for('main.update_password'))

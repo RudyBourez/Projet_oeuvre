@@ -3,6 +3,7 @@ from sqlalchemy.sql import text
 from werkzeug.security import generate_password_hash
 from . import db
 from datetime import date
+from .password_generator import generate_password
 
 class User(UserMixin, db.Model):
     __tablename__ = 'User'
@@ -12,7 +13,6 @@ class User(UserMixin, db.Model):
     date_inscription = db.Column(db.Date)
     roles = db.relationship('Role', secondary='UserRole',
             backref=db.backref('users', lazy='dynamic'))
-    
     
     @classmethod
     def get_all_user(cls):
@@ -26,12 +26,22 @@ class User(UserMixin, db.Model):
         return cursor.fetchall()
     
     @classmethod
-    def create_user(cls, email):
+    def create_user(cls, email, role):
         conn = db.session()
-        conn.execute(text(f'INSERT INTO USER VALUES ("{email}", "{generate_password_hash("this_is_the_first_password")}", {date.today()})'))
-        db.session.commit()
-        cursor = conn.execute(text(f'SELECT MAX(ID) FROM USER'))
-        return cursor.fetchone()
+        user = conn.execute(text(f'SELECT * FROM USER WHERE EMAIL="{email}"')).cursor.fetchone()
+        if not user:
+            # On crée le role pour l'attacher à l'utilisateur
+            relation = Role(name=role, is_active=1)
+            # On crée le nouvel utilisateur avec son role attaché et un mot de passe aléatoire
+            password = generate_password(16)
+            user = User(email=email, password=generate_password_hash(password),date_inscription=date.today())
+            # On attache le role à l'utilisateur
+            user.roles.append(relation)
+            db.session.add(user)
+            db.session.commit()
+            return [f"Le compte a bien été crée\n{email}: Role {role}", "success", password]
+        else:
+            return ["Cette adresse mail est déjà utilisée", "alert"]
     
     @classmethod
     def get_user_by_id(cls, id):
@@ -45,7 +55,14 @@ class User(UserMixin, db.Model):
                                     ''')).cursor
         return cursor.fetchone()
     
-# Define Role model
+    @classmethod
+    def modify_password(cls, email, password):    
+        conn = db.session()
+        conn.execute(text(f'UPDATE USER SET PASSWORD="{generate_password_hash(password)}" WHERE EMAIL="{email}"'))
+        db.session.commit()
+        return "Votre compte a bien été crée"
+    
+# Définition du modèle gérant les Roles
 class Role(db.Model):
     __tablename__ = 'Role'
     id = db.Column(db.Integer(), primary_key=True)
@@ -71,7 +88,7 @@ class UserRoles(db.Model):
         # On récupére l'id de l'utilisateur
         id = conn.execute(text(f'SELECT ID FROM USER WHERE EMAIL="{email}"')).cursor.fetchone()[0]
         # On récupére le nouvel id du role
-        role_id = conn.execute(text(f'SELECT ID FROM ROLE WHERE NAME="{role}" AND IS_ACTIVE={is_active}')).cursor.fetchone()[0]
+        role_id = Role.get_role_id(role, is_active)
         # On modifie l'entrèe
         conn.execute(text(f'''
                           UPDATE USERROLE
@@ -80,9 +97,3 @@ class UserRoles(db.Model):
                      '''))
         db.session.commit()
         return "Modification correctement effectuée"
-    
-    @classmethod
-    def attach_role(cls, user_id, role_id):
-        conn = db.session()
-        conn.execute(text(f'INSERT INTO USERROLE VALUES ({user_id}, {role_id})'))
-        return 'Le compte a bien été crée'

@@ -131,7 +131,9 @@ nav{
     font-size: 16px;
     color: white;
 }
-
+.form input{
+    width:90%;
+}
 /* Users.html */
 table{
     text-align:center;

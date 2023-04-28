@@ -39,7 +39,13 @@
             {% endif %}
         </div>
   
-        <h1> {{ request.path[1:]|capitalize }} </h1>
+        <h1>
+            {% if "_" in request.path[1:] %}
+                Modification de mot de passe
+            {% else %}
+                {{ request.path[1:]|capitalize }}
+            {% endif %}
+        </h1>
         <div>
             {% if not current_user.is_authenticated %}
                 {% if request.path!='/connexion' %}
@@ -49,6 +55,9 @@
                     <a href="{{ url_for('main.contact') }}"><i class="fa-regular fa-envelope"></i> Nous contacter</a>
                 {% endif %}
             {% else %}
+                {% if request.path!='/update_password' %}
+                    <a href="{{ url_for('main.update_password') }}"><i class="fa-solid fa-gear"></i></a>
+                {% endif %}
                 <a href="{{ url_for('auth.logout') }}"><i class="fa-solid fa-power-off"></i> Déconnexion</a>
             {% endif %}
 
